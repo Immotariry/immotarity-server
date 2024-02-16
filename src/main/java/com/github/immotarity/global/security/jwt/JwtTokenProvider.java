@@ -1,6 +1,5 @@
 package com.github.immotarity.global.security.jwt;
 
-
 import com.github.immotarity.global.security.jwt.dto.TokenResponse;
 import com.github.immotarity.global.security.principle.AuthDetailsService;
 import io.jsonwebtoken.Claims;
@@ -27,15 +26,15 @@ public class JwtTokenProvider {
     private final AuthDetailsService authDetailsService;
     private static final String ACCESS_KEY = "access_token";
 
-    public TokenResponse getToken(String accountId) {
-        String accessToken = generateToken(accountId, accessExp, ACCESS_KEY);
+    public TokenResponse getToken(String email) {
+        String accessToken = generateToken(email, accessExp, ACCESS_KEY);
 
         return new TokenResponse(accessToken);
     }
 
-    private String generateToken(String accountId, long expiration, String type) {
-        return Jwts.builder().signWith(SignatureAlgorithm.HS256, secretKey)
-                .setSubject(accountId)
+    private String generateToken(String email, long expiration, String type) {
+        return "Bearer " + Jwts.builder().signWith(SignatureAlgorithm.HS256, secretKey)
+                .setSubject(email)
                 .setHeaderParam("typ", type)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))

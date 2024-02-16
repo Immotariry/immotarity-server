@@ -1,7 +1,7 @@
 package com.github.immotarity.global.security.principle;
 
 import com.github.immotarity.domain.user.domain.User;
-import com.github.immotarity.domain.user.domain.repository.UserRepository;
+import com.github.immotarity.domain.user.domain.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) {

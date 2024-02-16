@@ -21,5 +21,5 @@ spring:
     property-naming-strategy: SNAKE_CASE
 
   jwt:
-    secretKey: aslkdjkasjdlka8f789asdsa
+    secretKey: sruUC4+0P7oneMQdgNb7s1lttC7MtLvkJ+Qhf5oMGkAjOuU=
     accessExp: 36000
