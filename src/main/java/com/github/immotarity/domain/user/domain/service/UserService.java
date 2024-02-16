@@ -2,6 +2,7 @@ package com.github.immotarity.domain.user.domain.service;
 
 import com.github.immotarity.domain.user.domain.Role;
 import com.github.immotarity.domain.user.domain.User;
+import com.github.immotarity.domain.user.domain.controller.dto.LoginRequest;
 import com.github.immotarity.domain.user.domain.controller.dto.SignupRequest;
 import com.github.immotarity.domain.user.domain.repository.UserRepository;
 import com.github.immotarity.global.security.jwt.JwtTokenProvider;
@@ -37,7 +38,22 @@ public class UserService {
                 .role(STAFF)
                 .build();
 
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public TokenResponse login(LoginRequest request) {
+
+        String email = request.getEmail();
+        String password = request.getPassword();
+
+        User user = userRepository.findByEmail(email).orElseThrow(RuntimeException::new);
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException();
+        }
+
+        return tokenProvider.getToken(user.getEmail());
     }
 
 }
