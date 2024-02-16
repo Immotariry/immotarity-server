@@ -22,7 +22,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public TokenResponse join(SignupRequest request) {
+    public void join(SignupRequest request) {
 
         String email = request.getEmail();
         String username = request.getUsername();
@@ -38,8 +38,6 @@ public class UserService {
                 .build();
 
         User savedUser = userRepository.save(user);
-
-        return tokenProvider.getToken(savedUser.getEmail());
     }
 
 }

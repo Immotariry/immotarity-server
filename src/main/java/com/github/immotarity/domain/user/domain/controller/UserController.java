@@ -1,9 +1,9 @@
 package com.github.immotarity.domain.user.domain.controller;
 
+import com.github.immotarity.domain.user.domain.controller.dto.LoginRequest;
+import com.github.immotarity.domain.user.domain.controller.dto.LoginResponse;
 import com.github.immotarity.domain.user.domain.controller.dto.SignupRequest;
-import com.github.immotarity.domain.user.domain.controller.dto.SignupResponse;
 import com.github.immotarity.domain.user.domain.service.UserService;
-import com.github.immotarity.global.security.jwt.dto.TokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +20,15 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponse> signup(@RequestBody @Valid SignupRequest signupRequest) {
-        TokenResponse tokenResponse = userService.join(signupRequest);
-        return ResponseEntity.ok(new SignupResponse(tokenResponse.getAccessToken()));
+    public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest signupRequest) {
+        userService.join(signupRequest);
+        return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+
+    }
+
 
 }
