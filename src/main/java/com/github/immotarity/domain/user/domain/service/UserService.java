@@ -5,8 +5,11 @@ import com.github.immotarity.domain.user.domain.User;
 import com.github.immotarity.domain.user.domain.controller.dto.LoginRequest;
 import com.github.immotarity.domain.user.domain.controller.dto.SignupRequest;
 import com.github.immotarity.domain.user.domain.repository.UserRepository;
+import com.github.immotarity.global.manager.CookieManager;
 import com.github.immotarity.global.security.jwt.JwtTokenProvider;
 import com.github.immotarity.global.security.jwt.dto.TokenResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final CookieManager cookieManager;
 
     @Transactional
     public void join(SignupRequest request) {
@@ -42,7 +46,7 @@ public class UserService {
     }
 
     @Transactional
-    public TokenResponse login(LoginRequest request) {
+    public void login(HttpServletResponse httpServletResponse, LoginRequest request) {
 
         String email = request.getEmail();
         String password = request.getPassword();
@@ -53,7 +57,7 @@ public class UserService {
             throw new RuntimeException();
         }
 
-        return tokenProvider.getToken(user.getEmail());
+        cookieManager.addTokenCookie(httpServletResponse, JwtTokenProvider.ACCESS_KEY, tokenProvider.getToken(user.getEmail()).getAccessToken(), tokenProvider.accessExp, true);
     }
 
 }

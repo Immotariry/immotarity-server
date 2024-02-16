@@ -1,5 +1,6 @@
 package com.github.immotarity.global.security.jwt;
 
+import com.github.immotarity.global.manager.CookieManager;
 import com.github.immotarity.global.security.jwt.dto.TokenResponse;
 import com.github.immotarity.global.security.principle.AuthDetailsService;
 import io.jsonwebtoken.Claims;
@@ -21,10 +22,11 @@ public class JwtTokenProvider {
     @Value("${spring.jwt.secretKey}")
     private String secretKey;
     @Value("${spring.jwt.accessExp}")
-    private Long accessExp;
+    public Long accessExp;
 
     private final AuthDetailsService authDetailsService;
-    private static final String ACCESS_KEY = "access_token";
+    private final CookieManager cookieManager;
+    public static final String ACCESS_KEY = "access_token";
 
     public TokenResponse getToken(String email) {
         String accessToken = generateToken(email, accessExp, ACCESS_KEY);
@@ -33,7 +35,7 @@ public class JwtTokenProvider {
     }
 
     private String generateToken(String email, long expiration, String type) {
-        return "Bearer " + Jwts.builder().signWith(SignatureAlgorithm.HS256, secretKey)
+        return Jwts.builder().signWith(SignatureAlgorithm.HS256, secretKey)
                 .setSubject(email)
                 .setHeaderParam("typ", type)
                 .setIssuedAt(new Date())
@@ -42,15 +44,12 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        String bearer = request.getHeader("Authorization");
+        String bearer = cookieManager.getCookieValue(request, ACCESS_KEY);
         return parseToken(bearer);
     }
 
     public String parseToken(String bearerToken) {
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.replace("Bearer ", "");
-        }
-        return null;
+        return bearerToken;
     }
 
     public UsernamePasswordAuthenticationToken authorization(String token) {
