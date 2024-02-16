@@ -14,8 +14,8 @@ public class AuthDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String userName) {
-        User user = userRepository.findByUserName(userName)
+    public UserDetails loadUserByUsername(String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(RuntimeException::new);
         return new AuthDetails(user);
     }
