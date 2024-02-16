@@ -1,6 +1,5 @@
 package com.github.immotarity.global.config;
 
-import com.github.immotarity.domain.user.domain.User;
 import com.github.immotarity.global.security.jwt.JwtTokenFilter;
 import com.github.immotarity.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;

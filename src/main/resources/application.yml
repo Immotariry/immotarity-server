@@ -22,6 +22,6 @@ spring:
 
   jwt:
     secretKey: sruUC4+0P7oneMQdgNb7s1lttC7MtLvkJ+Qhf5oMGkAjOuU=
-    accessExp: 36000
+    accessExp: 6000000
 
 cookie-domain: localhost

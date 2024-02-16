@@ -1,14 +1,11 @@
 package com.github.immotarity.domain.user.domain.service;
 
-import com.github.immotarity.domain.user.domain.Role;
 import com.github.immotarity.domain.user.domain.User;
 import com.github.immotarity.domain.user.domain.controller.dto.LoginRequest;
 import com.github.immotarity.domain.user.domain.controller.dto.SignupRequest;
 import com.github.immotarity.domain.user.domain.repository.UserRepository;
 import com.github.immotarity.global.manager.CookieManager;
 import com.github.immotarity.global.security.jwt.JwtTokenProvider;
-import com.github.immotarity.global.security.jwt.dto.TokenResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

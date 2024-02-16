@@ -1,7 +1,6 @@
 package com.github.immotarity.domain.user.domain.controller;
 
 import com.github.immotarity.domain.user.domain.controller.dto.LoginRequest;
-import com.github.immotarity.domain.user.domain.controller.dto.LoginResponse;
 import com.github.immotarity.domain.user.domain.controller.dto.SignupRequest;
 import com.github.immotarity.domain.user.domain.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
