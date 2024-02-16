@@ -22,6 +22,7 @@ public class UserService {
     private final JwtTokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final CookieManager cookieManager;
+    private final HttpServletResponse httpServletResponse;
 
     @Transactional
     public void join(SignupRequest request) {
@@ -43,7 +44,7 @@ public class UserService {
     }
 
     @Transactional
-    public void login(HttpServletResponse httpServletResponse, LoginRequest request) {
+    public void login(LoginRequest request) {
 
         String email = request.getEmail();
         String password = request.getPassword();

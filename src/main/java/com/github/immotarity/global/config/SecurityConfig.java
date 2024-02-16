@@ -14,6 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
@@ -45,18 +50,33 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
-                        .requestMatchers("/staff").hasAuthority("STAFF")
-                        .requestMatchers("/researcher").hasAuthority("RESEARCHER")
-                        .requestMatchers("/manager").hasAuthority("MANAGER")
-                        .requestMatchers("/executive").hasAuthority("EXECUTIVE")
+                        .requestMatchers("/staff").hasAnyAuthority("STAFF", "RESEARCHER", "MANAGER", "EXECUTIVE", "ADMIN")
+                        .requestMatchers("/researcher").hasAnyAuthority("RESEARCHER", "MANAGER", "EXECUTIVE", "ADMIN")
+                        .requestMatchers("/manager").hasAnyAuthority("MANAGER", "EXECUTIVE", "ADMIN")
+                        .requestMatchers("/executive").hasAnyAuthority("EXECUTIVE", "ADMIN")
                         .requestMatchers("/admin").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
         );
 
         http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
-        http.cors(AbstractHttpConfigurer::disable);
+        http.cors((cors) -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.addAllowedHeader("*");
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }

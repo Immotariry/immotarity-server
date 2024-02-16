@@ -3,7 +3,6 @@ package com.github.immotarity.domain.user.domain.controller;
 import com.github.immotarity.domain.user.domain.controller.dto.LoginRequest;
 import com.github.immotarity.domain.user.domain.controller.dto.SignupRequest;
 import com.github.immotarity.domain.user.domain.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse httpServletResponse) {
-        userService.login(httpServletResponse, loginRequest);
+    public ResponseEntity<Void> login(@RequestBody @Valid LoginRequest loginRequest) {
+        userService.login(loginRequest);
         return ResponseEntity.ok().build();
     }
 
