@@ -1,5 +1,7 @@
 package com.github.immotarity.global.config;
 
+import com.github.immotarity.global.manager.CookieManager;
+import com.github.immotarity.global.security.handler.CustomAuthenticationEntryPointHandler;
 import com.github.immotarity.global.security.jwt.JwtTokenFilter;
 import com.github.immotarity.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +29,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CookieManager cookieManager;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -55,10 +57,13 @@ public class SecurityConfig {
                         .requestMatchers("/manager").hasAnyAuthority("MANAGER", "EXECUTIVE", "ADMIN")
                         .requestMatchers("/executive").hasAnyAuthority("EXECUTIVE", "ADMIN")
                         .requestMatchers("/admin").hasAuthority("ADMIN")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
         );
 
         http.addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+
+        http.exceptionHandling(exception ->
+                exception.authenticationEntryPoint(new CustomAuthenticationEntryPointHandler(cookieManager)));
 
         http.cors((cors) -> cors.configurationSource(corsConfigurationSource()));
 
